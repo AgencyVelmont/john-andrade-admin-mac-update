@@ -1,0 +1,17 @@
+{
+ "version": 2,
+ "files": [
+  {
+   "name": "logic.js",
+   "sha256": "eb09f7e8bbe551defb58f450c5e05b19cd4f53dabf7fe35acd71f4b0a429decf"
+  },
+  {
+   "name": "aviso.js",
+   "sha256": "d8dc1de336eef41e4ea6de735067bbb3a6373475d8570d138c598c4c6de27444"
+  },
+  {
+   "name": "config-publica.json",
+   "sha256": "e163cd5373aa63e7030cf3d42eb066038c79e85a83b9826d04cc99c390e8a4c7"
+  }
+ ]
+}
