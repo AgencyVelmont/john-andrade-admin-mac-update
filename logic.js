@@ -150,11 +150,18 @@ function menu() {
     ] },
     { label: 'App', submenu: [
       { label: 'Versão do app: ' + ctx.versao, enabled: false },
-      { label: 'Verificar atualização agora', click: async () => { const ok = ctx.verificaAtualizacao ? await ctx.verificaAtualizacao() : false; dialog.showMessageBox({ message: ok ? 'Atualização baixada. Feche o app (Cmd+Q) e abra de novo para usar a nova versão.' : 'Você já está com a versão mais nova.' }); } }
+      { label: 'Verificar atualização agora', click: async () => { const ok = ctx.verificaAtualizacao ? await ctx.verificaAtualizacao() : false; if (ok) perguntaReiniciar(); else dialog.showMessageBox({ message: 'Você já está com a versão mais nova.', detail: 'Versão do app: ' + ctx.versao + '. O app confere o Git sempre que abre e a cada 15 minutos.' }); } }
     ] },
     { role: 'windowMenu' }
   ]));
 }
+
+// chegou versão nova com o app aberto: pergunta se quer reiniciar agora
+function perguntaReiniciar() {
+  const r = dialog.showMessageBoxSync({ type: 'info', message: 'Tem uma versão nova do John Andrade Admin.', detail: 'Reinicie o app para usar a versão nova.', buttons: ['Reiniciar agora', 'Depois'], defaultId: 0, cancelId: 1 });
+  if (r === 0) { saindo = true; app.relaunch(); app.exit(0); }
+}
+function atualizadoEmSegundoPlano(versao) { log('versão nova baixada: ' + versao); app.whenReady().then(perguntaReiniciar); }
 
 function iniciar(opcoes) {
   if (iniciado) return; iniciado = true;
@@ -164,7 +171,9 @@ function iniciar(opcoes) {
   app.on('before-quit', () => { saindo = true; });
   app.whenReady().then(() => {
     leCfg();
-    log('app iniciado, versão ' + ctx.versao);
+    log('app iniciado, versão ' + ctx.versao + (ctx.atualizouAgora ? ' (acabou de atualizar)' : ''));
+    app.setAboutPanelOptions({ applicationName: 'John Andrade Admin', applicationVersion: app.getVersion() + ' · atualização ' + ctx.versao, copyright: 'Atualiza sozinho pelo Git ao abrir.' });
+    if (ctx.atualizouAgora && Notification.isSupported()) new Notification({ title: 'John Andrade Admin atualizado', body: 'Agora na versão ' + ctx.versao + '.', silent: true }).show();
     session.defaultSession.setPermissionRequestHandler((_wc, _perm, cb) => cb(false));
     menu();
     criaJanela();
@@ -173,4 +182,4 @@ function iniciar(opcoes) {
   });
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 }
-module.exports = { iniciar, log };
+module.exports = { iniciar, log, atualizadoEmSegundoPlano };

@@ -1,9 +1,9 @@
 {
- "version": 2,
+ "version": 3,
  "files": [
   {
    "name": "logic.js",
-   "sha256": "eb09f7e8bbe551defb58f450c5e05b19cd4f53dabf7fe35acd71f4b0a429decf"
+   "sha256": "ded9cc2c696362d89ab5a660dbd105373ae4c4eada7593f3c624f1ae84b40a1f"
   },
   {
    "name": "aviso.js",
